@@ -1,7 +1,8 @@
 package main
 
 import (
-	"fmt"
+	"go-mygram/config"
+	router "go-mygram/routers"
 	"log"
 	"os"
 
@@ -16,6 +17,8 @@ func init() {
 }
 
 func main() {
-	secretKey := os.Getenv("API_SECRET_KEY")
-	fmt.Println(secretKey)
+	config.StartDB()
+
+	port := ":" + os.Getenv("APP_PORT")
+	router.StartApp().Run(port)
 }

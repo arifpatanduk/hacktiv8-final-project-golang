@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	"go-mygram/database"
+	"go-mygram/config"
 	"go-mygram/models"
 	"net/http"
 	"strconv"
@@ -12,7 +12,7 @@ import (
 
 func PhotoAuthorization() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		db := database.GetDB()
+		db := config.GetDB()
 		photoID, err := strconv.Atoi(c.Param("photoID"))
 
 		if err != nil {
@@ -52,7 +52,7 @@ func PhotoAuthorization() gin.HandlerFunc {
 
 func CommentAuthorization() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		db := database.GetDB()
+		db := config.GetDB()
 		commentID, err := strconv.Atoi(c.Param("commentID"))
 
 		if err != nil {
@@ -92,7 +92,7 @@ func CommentAuthorization() gin.HandlerFunc {
 
 func SocialMediaAuthorization() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		db := database.GetDB()
+		db := config.GetDB()
 		sosmedID, err := strconv.Atoi(c.Param("sosmedID"))
 
 		if err != nil {

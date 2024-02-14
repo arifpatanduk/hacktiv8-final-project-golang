@@ -38,8 +38,8 @@ func StartApp() *gin.Engine {
 		commentRouter.POST("/", controllers.CreateComment)
 		
 		// authorized routes
-		commentRouter.PUT("/:commentID", controllers.UpdateComment)
-		commentRouter.DELETE("/:commentID", controllers.DeleteComment)	
+		commentRouter.PUT("/:commentID", middlewares.CommentAuthorization(), controllers.UpdateComment)
+		commentRouter.DELETE("/:commentID", middlewares.CommentAuthorization(), controllers.DeleteComment)	
 	}
 	
 	// social media route
@@ -48,8 +48,9 @@ func StartApp() *gin.Engine {
 		socialMediaRouter.GET("/", controllers.GetAllSocialMedia)
 		socialMediaRouter.GET("/:sosmedID", controllers.GetOneSocialMedia)
 		socialMediaRouter.POST("/", controllers.CreateSocialMedia)
-		socialMediaRouter.PUT("/:sosmedID", controllers.UpdateSocialMedia)
-		socialMediaRouter.DELETE("/:sosmedID", controllers.DeleteSocialMedia)	
+
+		socialMediaRouter.PUT("/:sosmedID", middlewares.SocialMediaAuthorization(), controllers.UpdateSocialMedia)
+		socialMediaRouter.DELETE("/:sosmedID", middlewares.SocialMediaAuthorization(), controllers.DeleteSocialMedia)	
 	}
 
 	return r
