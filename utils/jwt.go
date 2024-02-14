@@ -2,13 +2,14 @@ package utils
 
 import (
 	"errors"
+	"os"
 	"strings"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 )
 
-var secretKey = "rahasia"
+var secretKey = os.Getenv("API_SECRET_KEY")
 
 func GenerateToken(id uint, email string) string {
 	claims := jwt.MapClaims{
