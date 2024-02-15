@@ -19,22 +19,28 @@ func RegisterUser(c *gin.Context) {
 	_, _ = db, contentType
 	User := models.User{}
 
+	// validate json
 	if contentType == appJSON {
 		c.ShouldBindJSON(&User)
 	} else {
 		c.ShouldBind(&User)
 	}
 
-	err := db.Debug().Create(&User).Error
-
+	// validate input 
+	err := utils.ValidateStruct(User)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error":   "Bad Request",
-			"message": err.Error(),
-		})
+		c.JSON(http.StatusBadRequest, utils.ErrorResponse(utils.TranslateValidationErrors(err)))
 		return
 	}
 
+	// store to db
+	errCreate := db.Debug().Create(&User).Error
+	if err != nil {
+		c.JSON(http.StatusBadRequest, utils.ErrorResponse(errCreate.Error()))
+		return
+	}
+
+	// success response
 	response := gin.H{
 		"id":        User.ID,
 		"email":     User.Email,
@@ -51,35 +57,30 @@ func LoginUser(c *gin.Context) {
 	User := models.User{}
 	password := ""
 
+	// validate json
 	if contentType == appJSON {
 		c.ShouldBindJSON(&User)
 	} else {
 		c.ShouldBind(&User)
 	}
 
+	// check the user according to the email
 	password = User.Password
 	err := db.Debug().Where("email = ?", User.Email).Take(&User).Error
 
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"error": "Unauthorized",
-			"message": "invalid email/password",
-		})
-		return
-	}
-
+	// check the password
 	comparePass := utils.ComparePass([]byte(User.Password), []byte(password))
 
-	if !comparePass {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"error": "Unauthorized",
-			"message": "invalid email/password",
-		})
+	// error response
+	if (err != nil || !comparePass) {
+		c.JSON(http.StatusUnauthorized, utils.ErrorResponse("invalid email or password"))
 		return
 	}
 
+	// generate token
 	token := utils.GenerateToken(User.ID, User.Email)
 
+	// success response
 	c.JSON(http.StatusOK, utils.SuccessResponse(gin.H{
 		"token": token,
 	}, "Login success"))
