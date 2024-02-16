@@ -65,6 +65,7 @@ func GetOnePhoto(c *gin.Context) {
 	// map the response
 	response := gin.H{
 		"photoID": photo.ID,
+		"userID": photo.UserID,
 		"title": photo.Title,
 		"caption": photo.Caption,
 		"photoUrl": photo.PhotoUrl,
@@ -127,6 +128,7 @@ func CreatePhoto(c *gin.Context) {
 	// map the response
 	response := gin.H{
 		"photoID": photo.ID,
+		"userID": photo.UserID,
 		"title": photo.Title,
 		"caption": photo.Caption,
 		"photoUrl": photo.PhotoUrl,
@@ -197,6 +199,7 @@ func UpdatePhoto(c *gin.Context) {
 	// map the response
 	response := gin.H{
 		"photoID": existingPhoto.ID,
+		"userID": existingPhoto.UserID,
 		"title": existingPhoto.Title,
 		"caption": existingPhoto.Caption,
 		"photoUrl": existingPhoto.PhotoUrl,
