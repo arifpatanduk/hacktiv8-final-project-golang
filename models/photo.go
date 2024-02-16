@@ -1,40 +1,19 @@
 package models
 
-import (
-	"github.com/asaskevich/govalidator"
-	"gorm.io/gorm"
-)
+import "mime/multipart"
 
 type Photo struct {
 	GormModel
-	Title  string `json:"title" form:"title" valid:"required~Title of your photo is required"`
-	Caption  string `json:"caption" form:"caption" valid:"required~Caption of your photo is required"`
-	PhotoUrl  string `json:"photo_url" form:"photo_url" valid:"required~Photo Url is required"`
-	UserID uint
-	User   *User
+	Title    string `json:"title" form:"title" validdate:"required"`
+	Caption  string `json:"caption" form:"caption"`
+	PhotoUrl string `json:"photo_url" form:"photo_url" validdate:"required"`
+	UserID   uint
+	User     *User
 	Comments []Comment `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"comments"`
 }
 
-func (p *Photo) BeforeCreate(tx *gorm.DB) (err error) {
-	_, errCreate := govalidator.ValidateStruct(p)
-
-	if errCreate != nil {
-		err = errCreate
-		return
-	}
-
-	err = nil
-	return
-}
-
-func (p *Photo) BeforeUpdate(tx *gorm.DB) (err error) {
-	_, errCreate := govalidator.ValidateStruct(p)
-
-	if errCreate != nil {
-		err = errCreate
-		return
-	}
-
-	err = nil
-	return
+type PhotoInput struct {
+	Title   string           `json:"title" form:"title" validate:"required"`
+	Caption string           `json:"caption" form:"caption"`
+	Photo   *multipart.FileHeader `json:"photo" form:"photo" validate:"required, image"`
 }
