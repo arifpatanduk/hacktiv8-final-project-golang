@@ -17,7 +17,7 @@ func GetAllPhoto(c *gin.Context) {
 
 	// get all photos from the database
 	var photos []models.Photo
-	err := db.Find(&photos)
+	err := db.Find(&photos).Error
 
 	if err != nil {
 		c.JSON(http.StatusOK, utils.ErrorResponse("Failed get all photos"))
@@ -29,6 +29,7 @@ func GetAllPhoto(c *gin.Context) {
 	for _, photo := range photos {
 		data := gin.H{
 			"photoID": photo.ID,
+			"userID": photo.UserID,
 			"title": photo.Title,
 			"caption": photo.Caption,
 			"photoUrl": photo.PhotoUrl,
