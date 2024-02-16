@@ -15,5 +15,5 @@ type Photo struct {
 type PhotoInput struct {
 	Title   string           `json:"title" form:"title" validate:"required"`
 	Caption string           `json:"caption" form:"caption"`
-	Photo   *multipart.FileHeader `json:"photo" form:"photo" validate:"required, image"`
+	Photo   *multipart.FileHeader `json:"photo" form:"photo" validate:"required"`
 }
